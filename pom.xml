@@ -11,9 +11,11 @@
 
 	<groupId>com.avrist</groupId>
 	<artifactId>eureka</artifactId>
-	<version>1.0.0.0</version>
+	<version>1.0.0</version>
 	<name>eureka</name>
 	<description>Avrist Eureka Server</description>
+
+	<packaging>war</packaging>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -53,6 +55,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>eureka-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
