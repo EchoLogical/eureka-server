@@ -1,0 +1,8 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /eureka-server
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false

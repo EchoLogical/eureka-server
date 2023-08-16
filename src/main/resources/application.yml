@@ -1,8 +1,5 @@
-server:
-  port: 8761
-  servlet:
-    context-path: /eureka-server
-eureka:
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
+spring:
+  application:
+    name: cnc-eureka-server
+  profiles:
+    active: sit
