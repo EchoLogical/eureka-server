@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="app_name" value="cnc_eureka_server" />
-    <property name="log_path" value="logs/cnc_eureka_server" />
-    <property name="log_path_error" value="logs/cnc_eureka_server/errors" />
-    <property name="log_path_audit" value="logs/cnc_eureka_server/audit" />
-    <property name="max_size" value="50MB" />
+    <property name="app_name" value="eureka-server" />
+    <property name="log_base_path" value="/var" />
+    <property name="log_path" value="${log_base_path}/logs/${app_name}" />
+    <property name="log_path_error" value="${log_path}/errors" />
+    <property name="log_path_audit" value="${log_path}/audit" />
+    <property name="max_size" value="20MB" />
+    <property name="keep_history_days" value="3" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -14,7 +16,7 @@
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
-            <onMatch>DENY</onMatch>
+            <onMatch>ACCEPT</onMatch>
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -22,7 +24,7 @@
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
-            <onMatch>DENY</onMatch>
+            <onMatch>ACCEPT</onMatch>
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -63,6 +65,10 @@
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${max_size}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep days' worth of history -->
+            <maxHistory>${keep_history_days}</maxHistory>
+            <!-- clean up old files on start up -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
 
@@ -73,7 +79,7 @@
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
-            <onMatch>DENY</onMatch>
+            <onMatch>ACCEPT</onMatch>
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -81,6 +87,10 @@
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
             <onMatch>ACCEPT</onMatch>
         </filter>
         <file>${log_path_audit}/${app_name}.audit.log</file>
@@ -98,6 +108,10 @@
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${max_size}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep days' worth of history -->
+            <maxHistory>${keep_history_days}</maxHistory>
+            <!-- clean up old files on start up -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
 
@@ -108,7 +122,7 @@
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
-            <onMatch>DENY</onMatch>
+            <onMatch>ACCEPT</onMatch>
         </filter>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -133,19 +147,24 @@
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${max_size}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep days' worth of history -->
+            <maxHistory>${keep_history_days}</maxHistory>
+            <!-- clean up old files on start up -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
 
     <!-- Send logs to both console and file audit -->
-    <logger name="com.avrist.chiss.endpoint" additivity="false">
+    <logger name="com.github.echological" additivity="false">
         <appender-ref ref="FILE-LOG" />
-        <appender-ref ref="FILE-AUDIT" />
         <appender-ref ref="FILE-ERROR" />
         <appender-ref ref="STDOUT" />
     </logger>
+    <logger name="org.hibernate" additivity="false">
+        <appender-ref ref="FILE-AUDIT" />
+    </logger>
     <root>
         <appender-ref ref="FILE-LOG" />
-        <appender-ref ref="FILE-AUDIT" />
         <appender-ref ref="FILE-ERROR" />
         <appender-ref ref="STDOUT" />
     </root>

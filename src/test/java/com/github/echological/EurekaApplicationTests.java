@@ -1,4 +1,4 @@
-package com.avrist.eureka;
+package com.github.echological;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

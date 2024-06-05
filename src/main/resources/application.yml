@@ -1,5 +1,5 @@
 spring:
   application:
-    name: cnc-eureka-server
+    name: eureka-server
   profiles:
     active: sit
