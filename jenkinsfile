@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS_ID = 'your-github-ssh-credentials-id'
+        DEPLOY_SSH_CREDENTIALS_ID = 'your-deploy-ssh-credentials-id'
+        DOCKER_IMAGE = 'eureka-server'
+        DEPLOY_SERVER = 'faisal@192.168.80.128'
+        DEPLOY_DIR = '/path/to/deploy/directory'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                sshagent(credentials: [env.GIT_CREDENTIALS_ID]) {
+                    git url: 'git@github.com:EchoLogical/eureka-server.git'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build(env.DOCKER_IMAGE)
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: [env.DEPLOY_SSH_CREDENTIALS_ID]) {
+                    sh """
+                        docker save -o /tmp/your-app-image.tar ${env.DOCKER_IMAGE}
+                        scp /tmp/your-app-image.tar ${DEPLOY_SERVER}:${DEPLOY_DIR}
+                        ssh ${DEPLOY_SERVER} 'docker load -i ${DEPLOY_DIR}/your-app-image.tar && docker stop your-app || true && docker rm your-app || true && docker run -d --name your-app -p 8080:8080 ${env.DOCKER_IMAGE}'
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
